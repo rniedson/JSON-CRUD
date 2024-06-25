@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 
 <!-- /**
-Brazil, JUL 24 
+Brazil, JUL 25 
 
 * For more information and to contribute to the improvement of this code,
  * please visit our GitHub repository: [GitHub Repository URL]
@@ -16,38 +16,53 @@ Brazil, JUL 24
  */
 -->
 
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JSON  CRUD - Prototype Wizard</title>
+    <title>JSON CRUD - Prototype Wizard</title>
+    <!-- Linking Tailwind CSS for styling -->
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-
 </head>
 <body class="bg-green-100">
-<div class="max-w-7xl mx-auto p-6 bg-white mt-10 rounded shadow">
-    <h1 class="text-2xl font-bold mb-4"><a href="https://github.com/rniedson/jsoncrud">JSON CRUD</a> - Prototype Wizard</h1>
-    <div class="flex">
-        <div class="w-2/3 p-4">
-            <input type="file" id="jsonFileInput" class="mb-4" />
-            <form id="jsonForm">
-                <div id="formContainer" class="space-y-4"></div>
-                <div id="actionButtons" class="mt-4 hidden">
-                    <button type="button" id="addItem" class="bg-blue-500 text-white p-2 rounded text-xs">Add Item</button>
-                    <button type="button" id="saveJson" class="bg-green-500 text-white p-2 rounded text-xs">Save</button>
-                </div>
-            </form>
-            <img id="placeholderImage" src="https://i.imgur.com/2JCf2cq.png" alt="Placeholder" class="w-full mt-4" />
-        </div>
-        <div class="w-1/3 p-4 bg-gray-200 rounded">
-            <div class="flex justify-between items-center mb-2">
-                <h2 class="text-sm font-bold">JSON Output</h2>
-                <button type="button" id="saveJsonOutput" class="bg-green-500 text-white p-2 rounded text-xs">Save</button>
+    <!-- Main container for the application -->
+    <div class="max-w-7xl mx-auto p-6 bg-white mt-10 rounded shadow">
+        <h1 class="text-2xl font-bold mb-4">
+            <!-- Title and link to GitHub repository -->
+            <a href="https://github.com/rniedson/jsoncrud">JSON CRUD</a> - Prototype Wizard
+        </h1>
+        <div class="flex">
+            <!-- Left section for file input and form -->
+            <div class="w-2/3 p-4">
+                <!-- Input for JSON file upload -->
+                <input type="file" class="json-file-input mb-4" />
+                <!-- Form container for dynamic fields -->
+                <form class="json-form">
+                    <!-- Container where form fields will be dynamically added -->
+                    <div class="form-container space-y-4"></div>
+                    <!-- Action buttons (Add Item and Save) -->
+                    <div class="action-buttons mt-4 hidden">
+                        <button type="button" class="add-item bg-blue-500 text-white p-2 rounded text-xs">Add Item</button>
+                        <button type="button" class="save-json bg-green-500 text-white p-2 rounded text-xs">Save</button>
+                    </div>
+                </form>
+                <!-- Placeholder image shown when no form is present -->
+                <img class="placeholder-image w-full mt-4" src="https://i.imgur.com/2JCf2cq.png" alt="Placeholder" />
             </div>
-            <pre id="jsonOutput" class="text-xs p-2 bg-white border border-gray-300 rounded"></pre>
+            <!-- Right section for JSON output -->
+            <div class="w-1/3 p-4 bg-gray-200 rounded">
+                <div class="flex justify-between items-center mb-2">
+                    <h2 class="text-sm font-bold">JSON Output</h2>
+                    <!-- Save button for JSON output -->
+                    <button type="button" class="save-json bg-green-500 text-white p-2 rounded text-xs">Save</button>
+                </div>
+                <!-- Preformatted text area for displaying JSON output -->
+                <pre class="json-output text-xs p-2 bg-white border border-gray-300 rounded"></pre>
+            </div>
         </div>
     </div>
-</div>
-<script src="app.js"></script>
+    <!-- Linking the JavaScript file for the application logic -->
+    <script src="app.js"></script>
 </body>
 </html>
