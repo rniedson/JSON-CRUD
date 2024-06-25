@@ -1,4 +1,8 @@
-# Welcome to JSON LOCAL CRUD - Prototype Wizard
+
+<img src="https://i.imgur.com/kbDTxxa.png" alt="Descrição da Imagem" width="200">
+
+
+# Welcome to JSON CRUD - Prototype Wizard
 
 Hello! This small guide will help you understand what the JSON CRUD Prototype Wizard is and why it is so useful, even though it is just a small file.
 
@@ -25,33 +29,70 @@ Instead of struggling to edit your JSON lists in a text editor, you can use our 
 - **Read** and view your data in a clear and organized manner.
 - **Update** information without hassle.
 - **Delete** data you no longer need.
+<img src="https://i.imgur.com/8hWTkmr.png" >
 
-### Advantages of using the JSON LOCAL CRUD - Prototype Wizard
-
-With the JSON CRUD Prototype Wizard, you can quickly and easily visualize and adjust your prototype before investing time and effort into developing a full database. This is especially useful for:
-- Those with limited time.
-- Those with little experience in developing CRUD systems.
-- Those who need a quick solution to present ideas and products to clients.
 
 ## Features
-- **Full CRUD Operations:** Streamline the creation, reading, updating, and deletion of JSON data.
-- **User-friendly Interface:** Navigate a clean and intuitive graphical interface for efficient data management.
-- **Real-time Preview:** Instantly see the impact of your changes with our dynamic JSON viewer.
-- **Flexible Export Options:** Easily prepare and export your JSON data for seamless integration with databases.
 
-## Getting Started
-1. Download the repository as a ZIP file or clone it to your local machine.
-2. Extract (if downloaded as ZIP) and open the `PrototypeWizard.html` file in your browser.
-3. Begin using the CRUD functionalities to manage your JSON data directly in your browser—no installation required.
-4. Modify and validate changes in real-time.
+1. **Load JSON Files**:
+   - Easily upload JSON files from your local system.
+   - Parse and display JSON data in a structured format for easy editing.
+
+2. **Dynamic Form Generation**:
+   - Automatically generates input fields based on the structure of the loaded JSON data.
+   - Supports various input types, including text, date, and file uploads.
+
+3. **Media Previews**:
+   - Automatically detects and previews media files (images, audio, and video) if the JSON data contains file paths.
+   - Provides a clear indication if a media file is missing.
+
+4. **CRUD Operations**:
+   - Add new data entries dynamically.
+   - Remove individual data fields or entire data entries.
+   - Edit existing data fields with real-time updates to the JSON output.
+
+5. **User-Friendly Interface**:
+   - Utilizes Tailwind CSS for a clean and responsive design.
+   - Intuitive layout with action buttons and clear labels for all functionalities.
+
+6. **Save JSON Data**:
+   - Save the edited JSON data back to a file on your local system.
+   - Ensures that your data is always up-to-date and easily accessible.
+
+7. **Data Field Removal**:
+   - Provides an "X" button next to each field in the first item to remove that field type from all entries.
+
+
+<img src="https://i.imgur.com/m139p1y.png" width="900">
+
+## How to Use
+
+1. **Load a JSON File**:
+   - Click on the file input to upload a JSON file from your local system.
+   - The JSON data will be parsed and displayed in a structured form.
+
+2. **Edit JSON Data**:
+   - Edit the fields directly in the generated form.
+   - Use the "Add Item" button to add new entries.
+   - Use the "Remove" button below each item title to delete entries.
+
+3. **Save JSON Data**:
+   - After making changes, click the "Save" button to download the updated JSON file.
+
+## Advantages
+
+- **Ease of Use**: Simplifies the process of handling JSON data with an intuitive interface.
+- **No Backend Required**: Operates entirely in the browser, eliminating the need for server-side processing.
+- **Real-Time Updates**: Automatically updates the JSON output as you edit fields, ensuring accuracy and immediacy.
+- **Versatile Input Handling**: Supports various data types, including text, dates, and media files, making it highly versatile.
+- **Open Source**: Freely available for modification and enhancement. Contributions are welcome!
 
 ## Case Studies
-![Long usando JSON CRUD](https://i.imgur.com/2JCf2cq.png "Interface do JSON CRUD Prototype Wizard")
 
 ### Case Study 1: The Practical Developer
 **Marco** uses the tool to quickly prototype a hotel reservation system, adjusting the JSON model in real-time based on client feedback, preventing unnecessary backend development.
 
-### Case Study 3: The Strategic Designer
+### Case Study 2: The Strategic Designer
 **Carlos** employs the wizard to prototype a digital art gallery application. By manipulating JSON data, he tests various layouts and functionalities, achieving instant visual feedback on design decisions.
 
 ## How to Contribute
