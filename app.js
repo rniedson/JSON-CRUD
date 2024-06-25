@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function () {
     jsonFileInput.addEventListener('change', handleFileUpload);
 
     // Event listener for adding a new item
-    addItemButton.addEventListener('click', () => addField(createEmptyItem()));
+    addItemButton.addEventListener('click', cloneLastItem);
 
     // Event listener for saving JSON to file
     saveJsonButton.addEventListener('click', saveJsonToFile);
@@ -51,17 +51,19 @@ document.addEventListener('DOMContentLoaded', function () {
         updateJsonOutput();
     }
 
-    // Create an empty item based on the structure of the last item
-    function createEmptyItem() {
+    // Clone the last item completely
+    function cloneLastItem() {
         const lastItem = formContainer.querySelector('.formSection:last-of-type');
-        const emptyItem = {};
         if (lastItem) {
-            lastItem.querySelectorAll('input').forEach(input => {
+            const clonedItem = {};
+            lastItem.querySelectorAll('input[type="text"], input[type="date"]').forEach(input => {
                 const key = input.className.split(' ')[0];
-                emptyItem[key] = '';
+                clonedItem[key] = input.value;
             });
+            addField(clonedItem);
+        } else {
+            addField();
         }
-        return emptyItem;
     }
 
     // Add a new field section to the form
@@ -99,6 +101,11 @@ document.addEventListener('DOMContentLoaded', function () {
             input.addEventListener('input', debounce(updateJsonOutput, 300));
         });
 
+        // Event listener for file input to update preview and JSON output
+        formSection.querySelectorAll('input[type="file"]').forEach(input => {
+            input.addEventListener('change', handleFileInputChange);
+        });
+
         updateJsonOutput();
     }
 
@@ -124,7 +131,10 @@ document.addEventListener('DOMContentLoaded', function () {
         let inputField = '';
 
         if (/\.(png|jpg|jpeg|gif|mp3|wav|ogg|mp4|webm)$/i.test(value)) {
-            inputField = `<input type="file" class="${key} w-full p-1 border border-gray-300 rounded text-xs" data-type="file" />`;
+            inputField = `
+                <input type="text" class="${key} w-full p-1 border border-gray-300 rounded text-xs" value="${value}" />
+                <input type="file" class="fileInput w-full p-1 border border-gray-300 rounded text-xs mt-1" data-key="${key}" />
+            `;
         } else if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
             inputField = `<input type="date" class="${key} w-full p-1 border border-gray-300 rounded text-xs" value="${value}" />`;
         } else {
@@ -136,6 +146,32 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         return inputField;
+    }
+
+    // Handle file input change
+    function handleFileInputChange(event) {
+        const input = event.target;
+        const key = input.dataset.key;
+        const file = input.files[0];
+
+        if (file) {
+            const fileReader = new FileReader();
+
+            fileReader.onload = function (e) {
+                const mediaPreview = input.closest('.formSection').querySelector('.mediaPreview');
+                if (file.type.startsWith('image/')) {
+                    mediaPreview.innerHTML = `<img src="${e.target.result}" alt="Image Preview" class="w-full h-auto"/>`;
+                } else if (file.type.startsWith('audio/')) {
+                    mediaPreview.innerHTML = `<audio controls class="w-full"><source src="${e.target.result}" type="${file.type}">Your browser does not support the audio element.</audio>`;
+                } else if (file.type.startsWith('video/')) {
+                    mediaPreview.innerHTML = `<video controls class="w-full"><source src="${e.target.result}" type="${file.type}">Your browser does not support the video element.</video>`;
+                }
+                input.previousElementSibling.value = file.name;
+                updateJsonOutput();
+            };
+
+            fileReader.readAsDataURL(file);
+        }
     }
 
     // Event listener to remove a field type from all items
@@ -158,10 +194,8 @@ document.addEventListener('DOMContentLoaded', function () {
         formContainer.querySelectorAll('.formSection').forEach(section => {
             const sectionData = {};
             section.querySelectorAll('input').forEach(input => {
-                const key = input.className.split(' ')[0];
-                if (input.dataset.type === 'file') {
-                    sectionData[key] = input.files[0] ? input.files[0].name : '';
-                } else {
+                if (input.type !== 'file') { // Ignore file inputs
+                    const key = input.className.split(' ')[0];
                     sectionData[key] = input.value;
                 }
             });
@@ -198,13 +232,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
-
-/**
- * For more information and to contribute to the improvement of this code,
- * please visit our GitHub repository: [GitHub Repository URL]
- * Feel free to fork the repository, create issues, and submit pull requests.
- */
-
 
 /**
  * For more information and to contribute to the improvement of this code,
