@@ -1,26 +1,25 @@
+// Ah, let's wait for the page to load before doing anything
 document.addEventListener('DOMContentLoaded', function () {
-    const jsonFileInput = document.getElementById('jsonFileInput');
-    const formContainer = document.getElementById('formContainer');
-    const jsonOutput = document.getElementById('jsonOutput');
-    const addItemButton = document.getElementById('addItem');
-    const saveJsonButton = document.getElementById('saveJson');
-    const saveJsonOutputButton = document.getElementById('saveJsonOutput');
-    const actionButtons = document.getElementById('actionButtons');
-    const placeholderImage = document.getElementById('placeholderImage');
+    // Getting DOM elements using classes and data-attributes
+    const jsonFileInput = document.querySelector('.json-file-input');
+    const formContainer = document.querySelector('.form-container');
+    const jsonOutput = document.querySelector('.json-output');
+    const addItemButton = document.querySelector('.add-item');
+    const saveJsonButtons = document.querySelectorAll('.save-json');
+    const actionButtons = document.querySelector('.action-buttons');
+    const placeholderImage = document.querySelector('.placeholder-image');
 
+    // Item counter. Because counting is important, right?
     let itemCounter = 0;
 
-    // Event listener for file upload
+    // When the JSON file is uploaded, execute the handleFileUpload function
     jsonFileInput.addEventListener('change', handleFileUpload);
-
-    // Event listener for adding a new item
+    // When the add item button is clicked, clone the last item. Wouldn't it be better to create a new empty item with fillable fields?
     addItemButton.addEventListener('click', cloneLastItem);
+    // Save the JSON when clicking the button. How about an 'autosave' button?
+    saveJsonButtons.forEach(button => button.addEventListener('click', saveJsonToFile));
 
-    // Event listener for saving JSON to file
-    saveJsonButton.addEventListener('click', saveJsonToFile);
-    saveJsonOutputButton.addEventListener('click', saveJsonToFile);
-
-    // Handle file upload and parse JSON
+    // This function reads the file uploaded by the user
     function handleFileUpload(event) {
         const file = event.target.files[0];
         const reader = new FileReader();
@@ -32,14 +31,14 @@ document.addEventListener('DOMContentLoaded', function () {
                 actionButtons.classList.remove('hidden');
                 placeholderImage.style.display = 'none';
             } catch (error) {
-                alert('Invalid JSON file');
+                alert('Invalid JSON file. Try again, maybe?');
             }
         };
 
         reader.readAsText(file);
     }
 
-    // Populate form with JSON data
+    // Fills the form with JSON data. Nice, but what if the JSON is too big?
     function populateForm(jsonData) {
         formContainer.innerHTML = '';
         itemCounter = 0;
@@ -51,9 +50,9 @@ document.addEventListener('DOMContentLoaded', function () {
         updateJsonOutput();
     }
 
-    // Clone the last item completely
+    // Clones the last item. Seems a bit hacky, how about a button to add a new item?
     function cloneLastItem() {
-        const lastItem = formContainer.querySelector('.formSection:last-of-type');
+        const lastItem = formContainer.querySelector('.form-section:last-of-type');
         if (lastItem) {
             const clonedItem = {};
             lastItem.querySelectorAll('input[type="text"], input[type="date"]').forEach(input => {
@@ -66,18 +65,18 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Add a new field section to the form
+    // Adds a new field to the form. Simplify the interface?
     function addField(item = {}) {
         itemCounter++;
         const formSection = document.createElement('div');
-        formSection.className = 'formSection p-4 border border-gray-300 rounded relative flex';
+        formSection.className = 'form-section p-4 border border-gray-300 rounded relative flex';
         formSection.innerHTML = `
-            <div class="mediaPreview w-1/4 mr-4">
+            <div class="media-preview w-1/4 mr-4">
                 ${generateMediaPreview(item)}
             </div>
             <div class="w-3/4">
-                <h3 class="formSectionTitle bg-white px-2 text-sm font-semibold">Item ${itemCounter}</h3>
-                <button type="button" class="removeField bg-red-500 text-white p-1 rounded text-xs mt-1">Remove</button>
+                <h3 class="form-section-title bg-white px-2 text-sm font-semibold">Item ${itemCounter}</h3>
+                <button type="button" class="remove-field bg-red-500 text-white p-1 rounded text-xs mt-1">Remove</button>
                 <div class="grid grid-cols-2 gap-4 mt-2">
                     ${Object.keys(item).map(key => `
                         <div class="relative">
@@ -90,26 +89,10 @@ document.addEventListener('DOMContentLoaded', function () {
         `;
         formContainer.appendChild(formSection);
 
-        // Event listener for removing the field section
-        formSection.querySelector('.removeField').addEventListener('click', () => {
-            formSection.remove();
-            updateJsonOutput();
-        });
-
-        // Event listener for updating JSON output when input changes
-        formSection.querySelectorAll('input').forEach(input => {
-            input.addEventListener('input', debounce(updateJsonOutput, 300));
-        });
-
-        // Event listener for file input to update preview and JSON output
-        formSection.querySelectorAll('input[type="file"]').forEach(input => {
-            input.addEventListener('change', handleFileInputChange);
-        });
-
         updateJsonOutput();
     }
 
-    // Generate media preview for images, audio, and video
+    // Generates media preview. Good idea, but be careful with file sizes
     function generateMediaPreview(item) {
         const mediaKeys = Object.keys(item).filter(key => /\.(png|jpg|jpeg|gif|mp3|wav|ogg|mp4|webm)$/i.test(item[key]));
         if (mediaKeys.length > 0) {
@@ -123,17 +106,17 @@ document.addEventListener('DOMContentLoaded', function () {
                 return `<video controls class="w-full"><source src="${mediaSrc}" type="video/${extension}">Your browser does not support the video element.</video>`;
             }
         }
-        return '<div class="text-xs text-gray-500">Arquivo ausente</div>';
+        return '<div class="text-xs text-gray-500">File missing. Sad, right?</div>';
     }
 
-    // Generate input field based on the type of data
+    // Generates input fields based on data type. Be careful with validations and security
     function generateInputField(key, value, isFirstItem) {
         let inputField = '';
 
         if (/\.(png|jpg|jpeg|gif|mp3|wav|ogg|mp4|webm)$/i.test(value)) {
             inputField = `
                 <input type="text" class="${key} w-full p-1 border border-gray-300 rounded text-xs" value="${value}" />
-                <input type="file" class="fileInput w-full p-1 border border-gray-300 rounded text-xs mt-1" data-key="${key}" />
+                <input type="file" class="file-input w-full p-1 border border-gray-300 rounded text-xs mt-1" data-key="${key}" />
             `;
         } else if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
             inputField = `<input type="date" class="${key} w-full p-1 border border-gray-300 rounded text-xs" value="${value}" />`;
@@ -142,13 +125,13 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         if (isFirstItem) {
-            inputField += `<button type="button" class="removeFieldType bg-red-500 text-white p-1 rounded text-xs ml-2 absolute right-0 top-0" data-key="${key}">X</button>`;
+            inputField += `<button type="button" class="remove-field-type bg-red-500 text-white p-1 rounded text-xs ml-2 absolute right-0 top-0" data-key="${key}">X</button>`;
         }
 
         return inputField;
     }
 
-    // Handle file input change
+    // Handles file input change. Pay attention to performance for large files
     function handleFileInputChange(event) {
         const input = event.target;
         const key = input.dataset.key;
@@ -158,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const fileReader = new FileReader();
 
             fileReader.onload = function (e) {
-                const mediaPreview = input.closest('.formSection').querySelector('.mediaPreview');
+                const mediaPreview = input.closest('.form-section').querySelector('.media-preview');
                 if (file.type.startsWith('image/')) {
                     mediaPreview.innerHTML = `<img src="${e.target.result}" alt="Image Preview" class="w-full h-auto"/>`;
                 } else if (file.type.startsWith('audio/')) {
@@ -174,7 +157,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Event listener to remove a field type from all items
+    // Removes a field type from all items. Make sure this is really necessary
     function removeFieldType(event) {
         const keyToRemove = event.target.dataset.key;
         document.querySelectorAll(`.${keyToRemove}`).forEach(input => {
@@ -187,14 +170,14 @@ document.addEventListener('DOMContentLoaded', function () {
         updateJsonOutput();
     }
 
-    // Update JSON output
+    // Updates JSON output. Because if it's not in the JSON, it doesn't exist
     function updateJsonOutput() {
         const jsonArray = [];
 
-        formContainer.querySelectorAll('.formSection').forEach(section => {
+        formContainer.querySelectorAll('.form-section').forEach(section => {
             const sectionData = {};
             section.querySelectorAll('input').forEach(input => {
-                if (input.type !== 'file') { // Ignore file inputs
+                if (input.type !== 'file') {
                     const key = input.className.split(' ')[0];
                     sectionData[key] = input.value;
                 }
@@ -205,7 +188,7 @@ document.addEventListener('DOMContentLoaded', function () {
         jsonOutput.textContent = JSON.stringify(jsonArray, null, 2);
     }
 
-    // Save JSON to file
+    // Saves the JSON to a file. Because everyone deserves a backup
     function saveJsonToFile() {
         const jsonBlob = new Blob([jsonOutput.textContent], { type: 'application/json' });
         const url = URL.createObjectURL(jsonBlob);
@@ -216,7 +199,7 @@ document.addEventListener('DOMContentLoaded', function () {
         URL.revokeObjectURL(url);
     }
 
-    // Debounce function to limit the rate of function calls
+    // Debounce function. Because functions don't need to be called all the time
     function debounce(func, wait) {
         let timeout;
         return function (...args) {
@@ -225,12 +208,24 @@ document.addEventListener('DOMContentLoaded', function () {
         };
     }
 
-    // Attach event listener for removing field type buttons
-    document.addEventListener('click', function (event) {
-        if (event.target.classList.contains('removeFieldType')) {
+    // Event delegation: listen for events on formContainer and delegate to children
+    formContainer.addEventListener('click', function (event) {
+        if (event.target.classList.contains('remove-field')) {
+            event.target.closest('.form-section').remove();
+            updateJsonOutput();
+        } else if (event.target.classList.contains('remove-field-type')) {
             removeFieldType(event);
         }
     });
+
+    formContainer.addEventListener('input', function (event) {
+        if (event.target.matches('input[type="text"], input[type="date"]')) {
+            debounce(updateJsonOutput, 300)();
+        } else if (event.target.matches('input[type="file"]')) {
+            handleFileInputChange(event);
+        }
+    });
+
 });
 
 /**
